@@ -5,250 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NVIDIA Drivers</title>
     <link rel="icon" href="assets/nvidia.png" type="image/png">
-    <style>
-        :root[data-scheme="light"] {
-            --bg-color: #f5f5f5;
-            --text-color: #333;
-            --entry-bg: #fff;
-            --entry-text-color: #555;
-            --link-bg: #4caf50;
-            --link-hover-bg: #45a049;
-        }
-        :root[data-scheme="dark"] {
-            --bg-color: #121212;
-            --text-color: #e0e0e0;
-            --entry-bg: #1e1e1e;
-            --entry-text-color: #b0b0b0;
-            --link-bg: #4caf50;
-            --link-hover-bg: #45a049;
-        }
-        ::selection {
-            background: #4caf50;
-            color: #ffffff;
-        }        
-        body {
-            font-family: "Roboto", sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-        }
-        header {
-            display: flex;
-            flex-direction: row;
-            gap: 0.50em;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            font-weight: 200;
-            font-size: 2em;
-            user-select: none;
-        }
-        header img {
-            width: 50px;
-            height: 50px;
-            pointer-events: none;
-        }
-        #driver-info {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .driver-entry {
-            background: var(--entry-bg);
-            padding: 16px;
-            margin: 20px 0;
-            border-radius: 12px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        }
-        .driver-entry.current-driver {
-            border: 2px solid var(--link-bg);
-        }
-        .driver-entry h2 {
-            margin-top: 0;
-            margin-bottom: 8px;
-            color: var(--link-bg);
-            font-size: 1.5em;
-            font-weight: 600;
-        }
-        .driver-entry p {
-            margin: 8px 0;
-            color: var(--entry-text-color);
-            font-weight: 400;
-        }
-        .driver-entry p strong {
-            font-weight: 600;
-            color: var(--text-color);
-        }
-        .driver-entry a {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 10px 20px;
-            background-color: var(--link-bg);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: background-color 0.3s;
-            user-select: none;
-        }
-        .driver-entry a:hover {
-            background-color: var(--link-hover-bg);
-        }
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-            .driver-entry {
-                padding: 15px;
-            }
-            .driver-entry h2 {
-                font-size: 1.3em;
-            }
-        }
-        #dark-mode-toggle {
-            display: block;
-            margin: 10px auto;
-            background: transparent;
-            color: var(--link-bg);
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: transform 0.3s;
-            font-size: 2rem;
-            user-select: none;
-        }
-        #studio-toggle {
-            display: block;
-            margin: 10px auto;
-            background: transparent;
-            color: var(--link-bg);
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: transform 0.3s;
-            font-size: 1rem;
-            user-select: none;
-        }
-        #dark-mode-toggle:hover, #studio-toggle:hover {
-            transform: scale(1.22);
-        }
-        #dark-mode-toggle:focus, #studio-toggle:focus {
-            outline: none;
-        }
-        #dark-mode-toggle:active, #studio-toggle:active {
-            transform: scale(1) translateY(2px);
-        }
-    </style>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            let scheme = localStorage.getItem("color-scheme");
-            if (!scheme) {
-                scheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-            }
-            document.documentElement.setAttribute("data-scheme", scheme);
-            document.getElementById("dark-mode-toggle").textContent = scheme === "dark" ? "☼" : "☾";
-            document.getElementById("studio-toggle").textContent = "Show Studio Drivers";
-            fetchDriverInfo();
-        });
-
-        function toggleDarkMode() {
-            const currentScheme = document.documentElement.getAttribute("data-scheme");
-            const newScheme = currentScheme === "dark" ? "light" : "dark";
-            document.documentElement.setAttribute("data-scheme", newScheme);
-            localStorage.setItem("color-scheme", newScheme);
-            document.getElementById("dark-mode-toggle").textContent = newScheme === "dark" ? "☼" : "☾";
-        }
-
-        function toggleStudioDrivers() {
-            const studioDrivers = document.querySelectorAll(".studio-driver");
-            studioDrivers.forEach(driver => {
-                driver.style.display = driver.style.display === "none" ? "block" : "none";
-            });
-            const toggleButton = document.getElementById("studio-toggle");
-            toggleButton.textContent = toggleButton.textContent === "Show Studio Drivers" ? "Hide Studio Drivers" : "Show Studio Drivers";
-        }
-
-        async function fetchDriverInfo() {
-            try {
-                const response = await fetch("https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php?func=DriverManualLookup&psid=127&pfid=1039&osID=135&languageCode=1033&isWHQL=0&beta=null&dltype=-1&dch=1&upCRD=null&qnf=0&ctk=null&sort1=1&numberOfResults=4");
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                const data = await response.json();
-                displayDriverInfo(data);
-            } catch (error) {
-                console.error("Failed to fetch driver information", error);
-                document.getElementById("driver-info").innerHTML = "Failed to retrieve driver data. Please try again later.";
-            }
-        }
-
-        function displayDriverInfo(data) {
-            if (data && (data.Success === "1" || data.Success === "4") && data.IDS && data.IDS.length > 0) {
-                let gameReadyDrivers = [];
-                let studioDrivers = [];
-                data.IDS.forEach((driver) => {
-                    const driverInfo = driver.downloadInfo;
-                    if (driverInfo && driverInfo.Success === "1") {
-                        if (driverInfo.Name.toLowerCase().includes("studio")) {
-                            studioDrivers.push(driver);
-                        } else {
-                            gameReadyDrivers.push(driver);
-                        }
-                    }
-                });
-
-                let driverDetails = "";
-                [...gameReadyDrivers, ...studioDrivers].forEach((driver, index) => {
-                    const driverInfo = driver.downloadInfo;
-                    let osNames = driverInfo.OSList.map(os => decodeURIComponent(os.OSName)).join(", ");
-                    let seriesNames = driverInfo.series.map(series => `${decodeURIComponent(series.seriesname)}`).join(", ");
-                    let releaseDate = new Date(driverInfo.ReleaseDateTime);
-                    let timeAgo = getTimeAgo(releaseDate);
-
-                    driverDetails += `
-                        <div class="driver-entry ${driverInfo.Name.toLowerCase().includes('studio') ? 'studio-driver' : ''} ${index === 0 ? 'current-driver' : ''}" style="${driverInfo.Name.toLowerCase().includes('studio') ? 'display:none;' : ''}">
-                            <h2>${decodeURIComponent(driverInfo.Name)}</h2>
-                            <p>Version <strong>${driverInfo.Version}</strong></p>
-                            <p>Release Date <strong>${driverInfo.ReleaseDateTime} (${timeAgo})</strong></p>
-                            <p>File Size <strong>${driverInfo.DownloadURLFileSize}</strong></p>
-                            <p>Supported OS <strong>${osNames}</strong></p>
-                            <p>Supported GPUs <em>${seriesNames}</em></p>
-                            <a href="${driverInfo.DownloadURL}" target="_blank">Download Driver</a>
-                        </div>
-                    `;
-                });
-                document.getElementById("driver-info").innerHTML = driverDetails || "No driver information available.";
-            } else {
-                document.getElementById("driver-info").innerHTML = "Failed to retrieve driver data.";
-            }
-        }
-
-        function getTimeAgo(date) {
-            const now = new Date();
-            const diff = Math.abs(now - date);
-
-            const minutes = Math.floor(diff / (1000 * 60));
-            const hours = Math.floor(diff / (1000 * 60 * 60));
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-            if (minutes < 1) {
-                return "just now";
-            } else if (minutes < 60) {
-                return `${minutes} minutes ago`;
-            } else if (hours < 24) {
-                return `${hours} hours ago`;
-            } else {
-                return `${days} days ago`;
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="assets/style.css">
+    <meta name="theme-color" content="#76b900">
+    <script src="assets/script.js" defer></script>
 </head>
+
 <body>
+    <div id="driverModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modalBanner"></div>
+            <div id="modalPatchNotes"></div>
+        </div>
+    </div>
     <header><img src="assets/nvidia-lg.png">Latest Drivers</header>
     <button id="dark-mode-toggle" onclick="toggleDarkMode()">☼</button>
-       <div id="driver-info">
+    <div id="gpu-info"></div>
+    <div id="driver-info">
         Loading driver information...
     </div>
     <button id="studio-toggle" onclick="toggleStudioDrivers()">Show Studio Drivers</button>
 </body>
+
 </html>
