@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NVIDIA Drivers</title>
-    <link rel="icon" href="nvidia.png" type="image/png">
+    <link rel="icon" href="assets/nvidia.png" type="image/png">
     <style>
         :root[data-scheme="light"] {
             --bg-color: #f5f5f5;
@@ -22,8 +22,12 @@
             --link-bg: #4caf50;
             --link-hover-bg: #45a049;
         }
+        ::selection {
+            background: #4caf50;
+            color: #ffffff;
+        }        
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Roboto", sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
@@ -36,8 +40,14 @@
             align-items: center;
             justify-content: center;
             margin-bottom: 20px;
-            font-weight: bold;
-            font-size: 1.5em;
+            font-weight: 200;
+            font-size: 2em;
+            user-select: none;
+        }
+        header img {
+            width: 50px;
+            height: 50px;
+            pointer-events: none;
         }
         #driver-info {
             max-width: 800px;
@@ -79,6 +89,7 @@
             border-radius: 8px;
             font-weight: 600;
             transition: background-color 0.3s;
+            user-select: none;
         }
         .driver-entry a:hover {
             background-color: var(--link-hover-bg);
@@ -96,7 +107,7 @@
         }
         #dark-mode-toggle {
             display: block;
-            margin: auto;
+            margin: 10px auto;
             background: transparent;
             color: var(--link-bg);
             border: none;
@@ -104,22 +115,39 @@
             cursor: pointer;
             transition: transform 0.3s;
             font-size: 2rem;
+            user-select: none;
         }
-        #dark-mode-toggle:hover {
+        #studio-toggle {
+            display: block;
+            margin: 10px auto;
+            background: transparent;
+            color: var(--link-bg);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            font-size: 1rem;
+            user-select: none;
+        }
+        #dark-mode-toggle:hover, #studio-toggle:hover {
             transform: scale(1.22);
         }
-        #dark-mode-toggle:focus {
+        #dark-mode-toggle:focus, #studio-toggle:focus {
             outline: none;
         }
-        #dark-mode-toggle:active {
+        #dark-mode-toggle:active, #studio-toggle:active {
             transform: scale(1) translateY(2px);
         }
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const scheme = localStorage.getItem("color-scheme") || "light";
+            let scheme = localStorage.getItem("color-scheme");
+            if (!scheme) {
+                scheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+            }
             document.documentElement.setAttribute("data-scheme", scheme);
             document.getElementById("dark-mode-toggle").textContent = scheme === "dark" ? "☼" : "☾";
+            document.getElementById("studio-toggle").textContent = "Show Studio Drivers";
             fetchDriverInfo();
         });
 
@@ -129,6 +157,15 @@
             document.documentElement.setAttribute("data-scheme", newScheme);
             localStorage.setItem("color-scheme", newScheme);
             document.getElementById("dark-mode-toggle").textContent = newScheme === "dark" ? "☼" : "☾";
+        }
+
+        function toggleStudioDrivers() {
+            const studioDrivers = document.querySelectorAll(".studio-driver");
+            studioDrivers.forEach(driver => {
+                driver.style.display = driver.style.display === "none" ? "block" : "none";
+            });
+            const toggleButton = document.getElementById("studio-toggle");
+            toggleButton.textContent = toggleButton.textContent === "Show Studio Drivers" ? "Hide Studio Drivers" : "Show Studio Drivers";
         }
 
         async function fetchDriverInfo() {
@@ -148,20 +185,20 @@
         function displayDriverInfo(data) {
             if (data && (data.Success === "1" || data.Success === "4") && data.IDS && data.IDS.length > 0) {
                 let gameReadyDrivers = [];
-                let otherDrivers = [];
+                let studioDrivers = [];
                 data.IDS.forEach((driver) => {
                     const driverInfo = driver.downloadInfo;
-                    if (driverInfo && driverInfo.Success === "1" && !driverInfo.Name.toLowerCase().includes("studio")) {
-                        if (driverInfo.Name.toLowerCase().includes("game ready")) {
-                            gameReadyDrivers.push(driver);
+                    if (driverInfo && driverInfo.Success === "1") {
+                        if (driverInfo.Name.toLowerCase().includes("studio")) {
+                            studioDrivers.push(driver);
                         } else {
-                            otherDrivers.push(driver);
+                            gameReadyDrivers.push(driver);
                         }
                     }
                 });
 
                 let driverDetails = "";
-                [...gameReadyDrivers, ...otherDrivers].forEach((driver, index) => {
+                [...gameReadyDrivers, ...studioDrivers].forEach((driver, index) => {
                     const driverInfo = driver.downloadInfo;
                     let osNames = driverInfo.OSList.map(os => decodeURIComponent(os.OSName)).join(", ");
                     let seriesNames = driverInfo.series.map(series => `${decodeURIComponent(series.seriesname)}`).join(", ");
@@ -169,7 +206,7 @@
                     let timeAgo = getTimeAgo(releaseDate);
 
                     driverDetails += `
-                        <div class="driver-entry ${index === 0 ? 'current-driver' : ''}">
+                        <div class="driver-entry ${driverInfo.Name.toLowerCase().includes('studio') ? 'studio-driver' : ''} ${index === 0 ? 'current-driver' : ''}" style="${driverInfo.Name.toLowerCase().includes('studio') ? 'display:none;' : ''}">
                             <h2>${decodeURIComponent(driverInfo.Name)}</h2>
                             <p>Version <strong>${driverInfo.Version}</strong></p>
                             <p>Release Date <strong>${driverInfo.ReleaseDateTime} (${timeAgo})</strong></p>
@@ -207,10 +244,11 @@
     </script>
 </head>
 <body>
-    <header><img src="nvidia.png">Latest Drivers</header>
-    <button id="dark-mode-toggle" onclick="toggleDarkMode()">Dark</button>
-    <div id="driver-info">
+    <header><img src="assets/nvidia-lg.png">Latest Drivers</header>
+    <button id="dark-mode-toggle" onclick="toggleDarkMode()">☼</button>
+       <div id="driver-info">
         Loading driver information...
     </div>
+    <button id="studio-toggle" onclick="toggleStudioDrivers()">Show Studio Drivers</button>
 </body>
 </html>
