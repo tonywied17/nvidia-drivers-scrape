@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,13 +15,27 @@
     <div id="driverModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
+            <div id="modalHeader"></div>
             <div id="modalBanner"></div>
             <div id="modalPatchNotes"></div>
         </div>
-    </div>
+    </div>    
     <header><img src="assets/nvidia-lg.png">Latest Drivers</header>
     <button id="dark-mode-toggle" onclick="toggleDarkMode()">☼</button>
-    <div id="gpu-info"></div>
+    <div id="info-bar">
+        <div id="gpu-info"></div>
+
+        <div id="result-count">
+            <span>includes studio drivers in count</span>
+            <select id="resultsCountSelect" onchange="fetchDriverInfo()">
+                <option value="4">4 Results</option>
+                <option value="8">8 Results</option>
+                <option value="10">10 Results</option>
+                <option value="12">12 Results</option>
+                <option value="20">20 Results</option>
+            </select>
+        </div>
+    </div>
     <div id="driver-info">
         Loading driver information...
     </div>
