@@ -1,0 +1,340 @@
+:root[data-scheme="light"] {
+    --bg-color: #f5f5f5;
+    --text-color: #333;
+    --entry-bg: #fff;
+    --entry-bg-rgb: 255, 255, 255;
+    --entry-text-color: #555;
+    --link-bg: #4caf50;
+    --link-hover-bg: #45a049;
+    color-scheme: light;
+}
+
+:root[data-scheme="dark"] {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --entry-bg: #1e1e1e;
+    --entry-bg-rgb: 30, 30, 30;
+    --entry-text-color: #b0b0b0;
+    --link-bg: #4caf50;
+    --link-hover-bg: #45a049;
+    color-scheme: dark;
+}
+
+::selection {
+    background: #4caf50;
+    color: #ffffff;
+}
+
+body {
+    font-family: "Roboto", sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+}
+
+a {
+    color: var(--link-bg);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--link-hover-bg);
+}
+
+a:visited {
+    color: var(--link-bg);
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    gap: 0.50em;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-weight: 200;
+    font-size: 2em;
+    user-select: none;
+}
+
+header img {
+    width: 50px;
+    height: 50px;
+    pointer-events: none;
+}
+
+#driver-info {
+    max-width: 800px;
+    margin: 0 auto;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
+}
+
+.driver-entry {
+    background: var(--entry-bg);
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.driver-entry.current-driver {
+    border: 2px solid var(--link-bg);
+}
+
+.driver-entry p {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    row-gap: 30px;
+    font-size: 1rem;
+    font-weight: 100;
+}
+
+.driver-entry p strong {
+    padding-left: 0;
+    display: block;
+    font-size: 0.9rem;
+}
+
+.driver-entry h2 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    color: var(--text-color);
+    font-size: 1.5em;
+    font-weight: 200;
+}
+
+.driver-entry p {
+    margin: 8px 0;
+    color: var(--entry-text-color);
+    font-weight: 400;
+}
+
+.driver-entry p strong {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.driver-actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.driver-entry a {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--link-bg);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background-color 0.3s;
+    user-select: none;
+}
+
+.driver-entry a:hover {
+    background-color: var(--link-hover-bg);
+}
+
+.driver-entry a.view-details {
+    background-color: #0078d4;
+    cursor: pointer;
+}
+
+.driver-entry a.view-details:hover {
+    background-color: #005a9e;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    .driver-entry {
+        padding: 15px;
+    }
+
+    .driver-entry h2 {
+        font-size: 1.3em;
+    }
+}
+
+#dark-mode-toggle {
+    display: block;
+    margin: 10px auto;
+    background: transparent;
+    color: var(--link-bg);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.3s;
+    font-size: 2rem;
+    user-select: none;
+}
+
+#studio-toggle {
+    display: block;
+    margin: 10px auto;
+    background: transparent;
+    color: var(--link-bg);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.3s;
+    font-size: 1rem;
+    user-select: none;
+}
+
+#dark-mode-toggle:hover,
+#studio-toggle:hover {
+    transform: scale(1.22);
+}
+
+#dark-mode-toggle:focus,
+#studio-toggle:focus {
+    outline: none;
+}
+
+#dark-mode-toggle:active,
+#studio-toggle:active {
+    transform: scale(1) translateY(2px);
+}
+
+#gpu-info {
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    font-weight: 400;
+    color: var(--entry-text-color);
+    display: flex;
+    width: 100%;
+    max-width: 800px;
+    margin: 1em auto;
+    align-items: center;
+    gap: 10px;
+}
+
+#gpu-info div {
+    background: var(--entry-bg);
+    padding: 4px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: 600;
+    color: var(--link-bg);
+}
+
+.supported-gpus-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+    color: var(--entry-text-color);
+}
+
+.supported-gpu-series {
+    box-shadow: 0 0 2px #45a049;
+    padding: 4px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: 400;
+}
+
+.matching-series {
+    display: inline-block;
+    background: linear-gradient(90deg, #318534, #31853459);
+    padding: 4px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: 600;
+    box-shadow: 0 0 2px #45a049;
+}
+
+.driver-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.driver-grid div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.driver-label {
+    font-weight: 300;
+    color: var(--link-bg);
+}
+
+.driver-label:not(:first-child) {
+    margin-top: 18px;
+}
+
+.driver-banner-iframe {
+    width: 100%;
+    height: 374px;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(var(--entry-bg-rgb), 0.2);
+}
+
+.modal-content {
+    background-color: rgba(var(--entry-bg-rgb), 0.8);
+    backdrop-filter: blur(5px);
+    margin: 1% auto;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 820px;
+    position: relative;
+    border: 2px solid var(--link-bg);
+}
+
+.close {
+    color: var(--link-bg);
+    position: absolute;
+    top: -22px;
+    right: -10px;
+    font-size: 2.5em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close:hover {
+    color: var(--link-hover-bg);
+    transform: scale(1.1);
+}
+
+.close:active {
+    transform: scale(1);
+}   
+
+#modalBanner iframe {
+    width: 100%;
+    height: 374px;
+    border: none;
+    border-radius: 8px;
+}
+
+#modalPatchNotes {
+    margin-top: 20px;
+    color: var(--entry-text-color);
+}
