@@ -212,9 +212,10 @@ function openModal(bannerURLGfe, releaseNotes, driverName, driverVersion, releas
     const modalHeader = document.getElementById("modalHeader");
 
     modalHeader.innerHTML = `
-        <h2>${decodeURIComponent(driverName)}</h2>
-        <p>Version: ${driverVersion}</p>
-        <p>Release Date: ${releaseDate} (${timeAgo})</p>
+        <div class="modal-title">
+            ${decodeURIComponent(driverName)} <span>${driverVersion}</span>
+            <p>${releaseDate} (${timeAgo})</p>
+        </div>
     `;
 
     modalBanner.innerHTML = bannerURLGfe ? `
