@@ -14,20 +14,19 @@
 <body>
     <div id="driverModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
             <div id="modalHeader"></div>
             <div id="modalBanner"></div>
             <div id="modalPatchNotes"></div>
         </div>
     </div>    
     <header><img src="assets/nvidia-lg.png">Latest Drivers</header>
-    <button id="dark-mode-toggle" onclick="toggleDarkMode()">☼</button>
+    <button id="dark-mode-toggle" onclick="ToggleDarkMode()">☼</button>
     <div id="info-bar">
         <div id="gpu-info"></div>
 
         <div id="result-count">
             <span>includes studio drivers in count</span>
-            <select id="resultsCountSelect" onchange="fetchDriverInfo()">
+            <select id="resultsCountSelect" onchange="FetchDriverInfo()">
                 <option value="4">4 Results</option>
                 <option value="8">8 Results</option>
                 <option value="10">10 Results</option>
@@ -39,7 +38,7 @@
     <div id="driver-info">
         Loading driver information...
     </div>
-    <button id="studio-toggle" onclick="toggleStudioDrivers()">Show Studio Drivers</button>
+    <button id="studio-toggle" onclick="ToggleStudioDrivers()">Show Studio Drivers</button>
 </body>
 
 </html>
