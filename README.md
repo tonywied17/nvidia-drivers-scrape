@@ -1,1 +1,1 @@
-open the html file
+Just literally open the `index.html` file in the browser
