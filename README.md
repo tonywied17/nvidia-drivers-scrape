@@ -1,7 +1,7 @@
-# nvidia-drivers-scraper
-![GitHub repo size](https://img.shields.io/github/repo-size/tonywied17/nvidia-drivers-scraper?style=for-the-badge)
-![GitHub language count](https://img.shields.io/github/languages/top/tonywied17/nvidia-drivers-scraper?style=for-the-badge)
-![GitHub last commit](https://img.shields.io/github/last-commit/tonywied17/nvidia-drivers-scraper?style=for-the-badge)
+# nvidia-drivers-scrape
+![GitHub repo size](https://img.shields.io/github/repo-size/tonywied17/nvidia-drivers-scrape?style=for-the-badge)
+![GitHub language count](https://img.shields.io/github/languages/top/tonywied17/nvidia-drivers-scrape?style=for-the-badge)
+![GitHub last commit](https://img.shields.io/github/last-commit/tonywied17/nvidia-drivers-scrape?style=for-the-badge)
 
 Just literally open the `index.html` file in the browser
 
